@@ -1,0 +1,2 @@
+MATCH (n:Posts{PostTypeId:1}) WHERE n.Tags CONTAINS 'neurons'
+RETURN n.Id AS questionId, n.Tags as topic, n.AnswerCount + n.CommentCount AS intensity ORDER BY intensity DESC LIMIT 1;

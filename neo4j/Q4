@@ -1,0 +1,9 @@
+match (answers)-[:ANSWER_OF]->(post:Posts) where post.AnswerCount >= 5 and exists(post.AcceptedAnswerId)
+match (v)-[:UPVOTE_OF]->(answers)
+with post,answers, size(collect(distinct v)) as UpvoteNumber
+with post as question, max(UpvoteNumber) as HighestUpvoteNumber, collect({answerId:answers.Id,UpvoteNumber:UpvoteNumber}) as answerSet
+unwind answerSet as answer
+with question, HighestUpvoteNumber, answer
+with question, HighestUpvoteNumber, answer.answerId as answerId, answer.UpvoteNumber as UpvoteNumber
+where question.AcceptedAnswerId = answerId and UpvoteNumber <> HighestUpvoteNumber
+return question

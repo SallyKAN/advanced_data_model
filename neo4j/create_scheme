@@ -1,0 +1,54 @@
+MATCH (n)
+DETACH DELETE n;
+
+LOAD CSV WITH HEADERS FROM 'file:///posts_processed.csv' AS row
+CREATE (p:Posts)
+SET p = row, p.Id = toInteger(p.Id), p.OwnerUserId = toInteger(p.OwnerUserId), p.ParentId = toInteger(p.ParentId), p.CommentCount = toInteger(p.CommentCount),p.AnswerCount = toInteger(p.AnswerCount), p.PostTypeId = toInteger(p.PostTypeId), p.AcceptedAnswerId = toInteger(p.AcceptedAnswerId);
+
+MATCH (question:Posts{PostTypeId:1})
+MATCH (answer:Posts{PostTypeId:2})
+WHERE question.Id = answer.ParentId
+MERGE (answer)-[:ANSWER_OF]->(question);
+
+match (p:Posts{PostTypeId:1}) where exists(p.AcceptedAnswerId)
+match (answer:Posts) where p.AcceptedAnswerId = answer.Id
+merge (answer)-[:ACCEPTED]->(p);
+
+LOAD CSV WITH HEADERS FROM "file:///users_processed.csv" AS row
+CREATE (n:Users)
+SET n = row, n.Id = toInteger(n.Id);
+
+MATCH (user:Users)
+MATCH (post:Posts)
+WHERE user.Id = post.OwnerUserId
+MERGE (user)-[:AUTHOR_OF]->(post);
+
+LOAD CSV WITH HEADERS FROM "file:///votes_processed.csv" AS row
+CREATE (n:Votes)
+SET n = row, n.Id = toInteger(n.Id), n.PostId = toInteger(n.PostId),n.UserId = toInteger(n.UserId),n.VoteTypeId = toInteger(n.VoteTypeId);
+
+match (p:Posts) 
+match (v:Votes{VoteTypeId:2}) where v.PostId = p.Id
+merge (v)-[:UPVOTE_OF]->(p);
+
+LOAD CSV WITH HEADERS FROM "file:///comments_processed.csv" AS row
+CREATE (n:Comments)
+SET n = row, n.PostId = toInteger(n.PostId), n.UserId = toInteger(n.UserId),n.Id = toInteger(n.Id);
+
+MATCH (comment:Comments)
+MATCH (post:Posts)
+WHERE comment.PostId = post.Id
+MERGE (comment)-[:COMMENT_OF]->(post);
+
+match (u:Users)
+match (c:Comments)
+where u.Id = c.UserId
+merge (u)-[:AUTHOR_OF]->(c);
+
+
+
+
+
+
+
+

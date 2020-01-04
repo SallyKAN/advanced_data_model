@@ -1,0 +1,7 @@
+MATCH (question:Posts{PostTypeId:1})<-[:ANSWER_OF]-(answer) WHERE question.Tags CONTAINS "philosophy"
+WITH collect(question)+collect(answer) AS p
+UNWIND p AS posts
+MATCH (v)-[:UPVOTE_OF]->(posts)
+WITH posts,size(collect(DISTINCT v)) AS upVoteNumber
+MATCH (u:Users)-[:AUTHOR_OF]->(posts)
+RETURN u.DisplayName AS userName, upVoteNumber ORDER BY upVoteNumber DESC LIMIT 1;

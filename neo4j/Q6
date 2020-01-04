@@ -1,0 +1,4 @@
+MATCH (u:Users)-[*]->(p:Posts{PostTypeId:1})<-[*]-(user:Users) WHERE user.Id = 8
+WITH u AS co_authors, size(collect(DISTINCT p)) AS co_post_number, user.Id AS exclude
+WHERE u.Id <> exclude
+RETURN co_authors, co_post_number ORDER BY co_post_number DESC LIMIT 5;

@@ -1,0 +1,3 @@
+MATCH (answer:Posts)-[:ACCEPTED]->(post:Posts) WHERE post.Tags CONTAINS "philosophy"
+with post, duration.between(datetime(answer.CreationDate),datetime(post.CreationDate)) AS diff 
+RETURN post ORDER BY diff LIMIT 1;

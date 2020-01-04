@@ -1,0 +1,4 @@
+MATCH (u:Users)-[*1..2]->(p:Posts), (u)-[:AUTHOR_OF]->(contents) WHERE datetime("2000-04-29T00:00:00.000Z") < datetime(contents.CreationDate) < datetime("2020-05-01T00:00:00.000Z")
+UNWIND split(p.Tags,",") AS tag
+WITH tag, size(collect(DISTINCT u)) AS UserNumber
+RETURN tag, UserNumber ORDER BY UserNumber DESC LIMIT 5;
