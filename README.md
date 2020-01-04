@@ -65,7 +65,7 @@ PREFIX="/home/snape/comp5338_assignments/data/"
 ```
 3. Make the script executable : `chmod +x ./import.sh`
 
-4. run command: `./import.sh`
+4. Run command: `./import.sh`
 - Please make sure the database name `comp5338` used in script hasn't existed before
 somehow the `mongoimport` won't overwrite the databases existed, and that might cause error in the later processing
 - `creating user_post collection...` could take few minutes, please don't exit during the processing
@@ -88,7 +88,7 @@ or you can specify the `-u USERNAME -p PASSWORD` for the following commands
 4. Run command to import
 `cat create_schema | cypher-shell`
 
-If you meet an error, it's mostly caused by the file name in the data path, sorry about that(I'm in such a hurry to submit (T _ T)  )
+If you meet an error, it's mostly caused by the file name in the data path)
 Please change in the load csv line
 `LOAD CSV WITH HEADERS FROM "file:///Votes.csv" AS row` to `LOAD CSV WITH HEADERS FROM "file:///votes_processed.csv" AS row`
 `LOAD CSV WITH HEADERS FROM "file:///Comments.csv" AS row` to `LOAD CSV WITH HEADERS FROM "file:///comments_processed.csv" AS row`
@@ -97,6 +97,6 @@ Please change in the load csv line
 1. Run command: `mongo < Q1.js` 
 
 # Test queries in Neo4j
-1. Run command: `cypher-shell < Q1` (Please make sure the username and password of are set as environment variable)
+1. Run command: `cypher-shell < Q1` (Please make sure the username and password of Neo4j are set as environment variables)
 
 
